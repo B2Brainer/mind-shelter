@@ -1,0 +1,66 @@
+.entry-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.entry-card {
+  background: rgba(7, 13, 18, 0.36);
+  border: 1px solid rgba(223, 218, 207, 0.12);
+  border-radius: 24px;
+  padding: 1.35rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.entry-card-general {
+  border-color: rgba(216, 180, 137, 0.44);
+  background: linear-gradient(180deg, rgba(92, 71, 47, 0.26), rgba(7, 13, 18, 0.32));
+}
+
+.entry-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.entry-badge {
+  display: inline-flex;
+  margin-bottom: 0.35rem;
+  color: #d7b58d;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+}
+
+.entry-card h3 {
+  font-size: 2rem;
+}
+
+.entry-date {
+  color: #c6d3cf;
+}
+
+.entry-card p {
+  margin: 0;
+  color: #e7ece7;
+  white-space: pre-wrap;
+}
+
+.entry-card-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.entry-list-empty {
+  border: 1px dashed rgba(223, 218, 207, 0.2);
+  border-radius: 24px;
+  padding: 1.5rem;
+  color: #d9e0dc;
+  background: rgba(7, 13, 18, 0.24);
+}
+
+@media (max-width: 720px) {
+  .entry-card-top {
+    flex-direction: column;
+  }
+}

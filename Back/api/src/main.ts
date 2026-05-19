@@ -15,10 +15,13 @@ async function bootstrap() {
   );
 
   const configService = app.get(ConfigService);
-  const frontendOrigin = configService.get<string>('app.frontendOrigin', 'http://localhost:5173');
+  const frontendOrigins = configService.get<string[]>('app.frontendOrigins', [
+    'http://localhost:5173',
+    'http://localhost:8080',
+  ]);
 
   app.enableCors({
-    origin: frontendOrigin,
+    origin: frontendOrigins,
     credentials: true,
   });
 

@@ -1,0 +1,77 @@
+.entry-editor {
+  background: rgba(247, 241, 231, 0.08);
+  border: 1px solid rgba(232, 221, 205, 0.16);
+  border-radius: 28px;
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.entry-editor-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.entry-editor-heading span {
+  color: #d5c6b3;
+}
+
+.entry-editor-heading h2 {
+  font-size: 2rem;
+}
+
+.entry-editor-grid {
+  display: grid;
+  grid-template-columns: 1fr 12rem;
+  gap: 1rem;
+}
+
+.entry-editor label {
+  display: grid;
+  gap: 0.45rem;
+  color: #ecf0eb;
+}
+
+.entry-editor input,
+.entry-editor select,
+.entry-editor textarea {
+  border: 1px solid rgba(230, 220, 205, 0.16);
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  background: rgba(15, 23, 30, 0.44);
+  color: #f4f4ef;
+}
+
+.primary-button,
+.ghost-button,
+.danger-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.1rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, #d8b489 0%, #b27d4d 100%);
+  color: #16212a;
+}
+
+.ghost-button {
+  background: rgba(244, 244, 239, 0.08);
+  color: #f4f4ef;
+  border: 1px solid rgba(244, 244, 239, 0.12);
+}
+
+.danger-button {
+  background: rgba(179, 96, 72, 0.22);
+  color: #ffd8cf;
+}
+
+@media (max-width: 720px) {
+  .entry-editor-grid {
+    grid-template-columns: 1fr;
+  }
+}

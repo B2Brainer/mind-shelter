@@ -1,0 +1,40 @@
+.app-shell {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(153, 188, 201, 0.24), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(90, 111, 92, 0.22), transparent 30%),
+    linear-gradient(180deg, #0f1b24 0%, #182733 52%, #24333c 100%);
+}
+
+.app-frame {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: min(1160px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.aurora {
+  position: absolute;
+  inset: auto;
+  width: 28rem;
+  height: 28rem;
+  border-radius: 999px;
+  filter: blur(40px);
+  opacity: 0.28;
+}
+
+.aurora-left {
+  top: -6rem;
+  left: -8rem;
+  background: #87a8b6;
+}
+
+.aurora-right {
+  right: -10rem;
+  bottom: -8rem;
+  background: #8c6b4d;
+}
