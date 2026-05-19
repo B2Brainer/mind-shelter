@@ -50,13 +50,12 @@ Important variables:
 - `DATABASE_URL`
 - `JWT_SECRET`
 - `JWT_EXPIRES_IN`
+- `VITE_API_BASE_URL` (optional for frontend local overrides)
 
 Notes:
 
 - `DATABASE_URL` in `.env` is intended for local backend execution from your machine, so it points to `localhost`.
 - Docker Compose overrides that value for the API container and uses the internal `postgres` hostname automatically.
-
-Frontend local example values are documented in `Front/.env.example`.
 
 ## Run Locally
 
@@ -148,7 +147,6 @@ Current pipeline checks:
 - Informal user story: `docs/user-story.md`
 - Agentic workflow notes: `AGENTIC.md`
 - Architecture notes and diagram: `docs/architecture.md`
-- Assessment checklist mapping: `docs/assessment-checklist.md`
 
 ## API Summary
 
