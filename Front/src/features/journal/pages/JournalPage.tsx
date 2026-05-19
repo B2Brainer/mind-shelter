@@ -24,6 +24,7 @@ type FeedbackState = {
 
 export function JournalPage({ accessToken, user, onLogout, onSessionExpired }: JournalPageProps) {
   const queryClient = useQueryClient()
+  const [editorVersion, setEditorVersion] = useState(0)
   const [filterType, setFilterType] = useState<'' | 'DAILY' | 'GENERAL'>('')
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
@@ -89,10 +90,11 @@ export function JournalPage({ accessToken, user, onLogout, onSessionExpired }: J
       setEditingEntry(null)
       setPendingDeleteEntryId(null)
       setPage(1)
+      setEditorVersion((currentVersion) => currentVersion + 1)
       await invalidateEntries()
     },
     onError: (error) => {
-      setFeedback({ kind: 'error', message: resolveApiMessage(error, 'Could not save entry.') })
+      handleMutationError(error, 'Could not save entry.', onSessionExpired, setFeedback)
     },
   })
 
@@ -103,10 +105,11 @@ export function JournalPage({ accessToken, user, onLogout, onSessionExpired }: J
       setFeedback({ kind: 'success', message: 'Entry updated.' })
       setEditingEntry(null)
       setPendingDeleteEntryId(null)
+      setEditorVersion((currentVersion) => currentVersion + 1)
       await invalidateEntries()
     },
     onError: (error) => {
-      setFeedback({ kind: 'error', message: resolveApiMessage(error, 'Could not update entry.') })
+      handleMutationError(error, 'Could not update entry.', onSessionExpired, setFeedback)
     },
   })
 
@@ -123,7 +126,7 @@ export function JournalPage({ accessToken, user, onLogout, onSessionExpired }: J
       await invalidateEntries()
     },
     onError: (error) => {
-      setFeedback({ kind: 'error', message: resolveApiMessage(error, 'Could not delete entry.') })
+      handleMutationError(error, 'Could not delete entry.', onSessionExpired, setFeedback)
     },
   })
 
@@ -229,7 +232,7 @@ export function JournalPage({ accessToken, user, onLogout, onSessionExpired }: J
 
       <div className="journal-grid">
         <EntryEditor
-          key={editingEntry ? editingEntry.id : 'create-entry'}
+          key={editingEntry ? editingEntry.id : `create-entry-${editorVersion}`}
           mode={editingEntry ? 'edit' : 'create'}
           initialEntry={editingEntry}
           hasExistingGeneralEntry={Boolean(generalEntry)}
@@ -433,4 +436,18 @@ function resolveApiMessage(error: unknown, fallback: string) {
 
 function isUnauthorizedError(error: unknown) {
   return error instanceof AxiosError && error.response?.status === 401
+}
+
+function handleMutationError(
+  error: unknown,
+  fallback: string,
+  onSessionExpired: (message: string) => void,
+  setFeedback: (feedback: FeedbackState) => void,
+) {
+  if (isUnauthorizedError(error)) {
+    onSessionExpired('Your session expired while saving changes. Sign in again to continue.')
+    return
+  }
+
+  setFeedback({ kind: 'error', message: resolveApiMessage(error, fallback) })
 }

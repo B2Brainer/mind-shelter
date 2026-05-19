@@ -51,6 +51,11 @@ Important variables:
 - `JWT_SECRET`
 - `JWT_EXPIRES_IN`
 
+Notes:
+
+- `DATABASE_URL` in `.env` is intended for local backend execution from your machine, so it points to `localhost`.
+- Docker Compose overrides that value for the API container and uses the internal `postgres` hostname automatically.
+
 Frontend local example values are documented in `Front/.env.example`.
 
 ## Run Locally
@@ -90,6 +95,8 @@ From the repository root:
 
 - `docker compose up --build`
 
+You can safely copy `.env.example` to `.env` before running Docker Compose. The API container will still use the internal database host configured in `docker-compose.yml`.
+
 This will start:
 
 - `postgres`
@@ -121,6 +128,8 @@ Backend tests currently cover:
 - update not-found behavior
 - delete behavior
 
+There is no seed data or demo account committed to the repository. Create an account from the UI or via `POST /auth/register`.
+
 Run backend tests from `Back/api`:
 
 - `npm run test`
@@ -139,6 +148,7 @@ Current pipeline checks:
 - Informal user story: `docs/user-story.md`
 - Agentic workflow notes: `AGENTIC.md`
 - Architecture notes and diagram: `docs/architecture.md`
+- Assessment checklist mapping: `docs/assessment-checklist.md`
 
 ## API Summary
 

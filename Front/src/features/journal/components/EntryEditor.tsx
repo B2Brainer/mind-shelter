@@ -55,13 +55,6 @@ export function EntryEditor({
       entryDate: new Date(entryDate).toISOString(),
       type,
     })
-
-    if (mode === 'create') {
-      setTitle('')
-      setContent('')
-      setEntryDate(toInputDate())
-      setType('DAILY')
-    }
   }
 
   return (
