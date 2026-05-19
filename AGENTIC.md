@@ -2,141 +2,162 @@
 
 ## Tools Used
 
-- GitHub Copilot (GPT-5.4) for planning, scaffolding, refactoring, and architectural iteration.
-- VS Code terminal for dependency installation, schema sync, Docker validation, and runtime checks.
-- Integrated browser tools for validating the actual frontend flow after implementation.
+- GitHub Copilot (GPT-5.4) for planning, scaffolding, debugging, and implementation support.
+- VS Code terminal for dependency management, Docker validation, runtime checks, and test execution.
+- Browser developer tools for validating frontend behavior and authenticated flows.
 
 ## Approach
 
-The project was built incrementally in small, reviewable milestones.
+I approached the project incrementally and validated each feature before moving to the next.
 
-Working pattern used:
+Instead of generating the full application at once, I used AI to help plan small implementation slices and then reviewed the generated output before integrating it.
 
-1. Analyze the assessment and inspect `luvao` before writing code.
-2. Reuse the structure of `luvao` where it improved clarity, but deliberately avoid its microservice complexity.
-3. Build one vertical slice at a time.
-4. Validate each slice immediately with build, lint, runtime requests, browser checks, or Docker checks.
-5. Record what needed manual correction instead of accepting generated output blindly.
+My working process was:
+
+1. Analyze the Ballast Lane assessment requirements before making implementation decisions.
+2. Reuse technologies and architectural conventions already familiar to me from a previous personal project (`luvao`) to reduce setup friction and focus on software quality, infrastructure, and explainability.
+3. Keep the domain intentionally small and easy to explain.
+4. Build one feature slice at a time (health → persistence → auth → journal domain → UI → infrastructure).
+5. Validate each slice through builds, linting, API requests, browser flows, or Docker execution before continuing.
+
+The idea was to not let the AI get into an error cicle
+
+---
 
 ## Key Prompts
 
-### Prompt 1
+### Prompt 1 — Assessment Analysis and Planning
 
 Request:
 
-"Analyze the Ballast Lane assessment and the `luvao` project first, then propose an incremental roadmap instead of generating the whole project at once."
+> Analyze the Ballast Lane technical assessment and inspect the technologies and architectural conventions used in my existing project (`luvao`). Based on that, propose an incremental roadmap for a small and explainable project instead of generating everything at once.
 
 What it produced:
 
-- a staged implementation plan
-- a smaller monolithic architecture based on the structure of `luvao`
+- a staged implementation roadmap
+- recommendations for incremental milestones
+- suggestions for project structure and validation checkpoints
 
 What I kept:
 
-- the incremental roadmap
-- the decision to use `Front/` and `Back/`
+- the incremental implementation strategy
+- the idea of building small reviewable slices
 - the recommendation to keep one primary entity
+- using familiar stack conventions to reduce unnecessary complexity
 
 What I changed:
 
-- I constrained the scope further to a single backend service and avoided extra abstractions where they were not buying clarity
+- I narrowed the scope further to keep the project easier to explain during live review
+- I avoided unnecessary abstractions that would not improve clarity
 
 Why:
 
-- the interview emphasizes explainability and live modifications more than architectural sophistication
+The assessment emphasizes understanding, explainability, testing, and live modifications more than architectural sophistication.
 
-### Prompt 2
+---
+
+### Prompt 2 — Project Idea Exploration
 
 Request:
 
-"Implement the backend in small validated slices: health endpoint first, then Prisma and users, then auth, then journal entries."
+> I want to combine philosophy and videogames into a small journaling project inspired by The Long Dark, where users can create daily notes and maintain a single general note connecting ideas across days. What do you think of this idea and how can it remain simple enough for the assessment?
 
 What it produced:
 
-- a clean NestJS bootstrap
-- Prisma persistence wiring
-- auth and journal controllers/services
+- a simplified journaling domain
+- the idea of keeping a single primary entity
+- suggestions for a small business rule
 
 What I kept:
 
-- the layering pattern
-- the Prisma integration approach
-- the route structure for auth and journal entries
+- the survival-inspired journaling concept
+- one main entity (`JournalEntry`)
+- a small domain with daily entries and one general reflection
 
 What I changed:
 
-- I adjusted dependency versions to stay compatible with Node 18
-- I corrected status codes based on runtime validation
-- I refined environment handling so local development and Docker use different `DATABASE_URL` values safely
+- I deliberately constrained the scope to avoid feature creep
 
 Why:
 
-- generated code compiled quickly, but runtime validation exposed configuration and API behavior issues that needed manual correction
+I wanted a project that reflected my interests but remained small enough to fully understand and explain.
 
-### Prompt 3
+---
+
+### Prompt 3 — Incremental Backend Implementation
 
 Request:
 
-"Create a small frontend that mirrors the backend capabilities with login, create/edit/delete entry, filter by type, and a style inspired by survival journaling."
+> Implement the backend in small validated slices, but avoid a problem I had previously in `luvao`: configuration drift between local execution and Docker. In that project I lost time because some services assumed container hostnames and container-only environment values even when I was running them directly from my machine, which made database and auth issues harder to debug. Start with a minimal running API and health endpoint, then continue incrementally with persistence, authentication, and journal functionality, keeping environment boundaries explicit and easy to reason about.
 
 What it produced:
 
-- a React + Vite frontend with auth, filtering, and CRUD views
+- a minimal NestJS API bootstrap
+- Prisma persistence and configuration scaffolding
+- authentication and journal feature scaffolding with clearer environment boundaries
 
 What I kept:
 
-- the feature-based structure
-- the central `services/api.ts` pattern
-- the small route map
+- the layered organization (controller/service/repository)
+- the incremental implementation flow
+- validation and route organization ideas
+- the emphasis on checking local and container execution early
 
 What I changed:
 
-- I fixed a React lint issue caused by synchronous state updates inside `useEffect`
-- I validated the actual browser flow and kept only the UI pieces necessary for the assessment
+- I adjusted dependency versions for compatibility with my environment
+- I corrected status codes after runtime testing
+- I simplified environment configuration for local and Docker execution
 
 Why:
 
-- the main goal was a UI that is easy to demo and easy to modify during review
+This prompt reflected a class of problem I had already seen before: once local and container assumptions get mixed, even small backend features become harder to trust. Framing the request this way helped keep the implementation incremental while reducing hidden setup coupling.
+
+---
 
 ## Critical Evaluation
 
 One useful example was the authentication slice.
 
-What the AI did well:
+### What the AI got right
 
-- proposed a clean split between controller, service, repository, and guard
-- kept the auth flow small enough to explain
-- reused the persistence layer already added with Prisma
+- proposed a clean separation between controller, service, and persistence logic
+- kept the authentication flow small enough to explain comfortably
+- integrated naturally with the persistence layer
 
-What the AI did poorly:
+### What required improvement
 
-- initially selected NestJS versions that expected Node 20+
-- left `POST /auth/login` returning `201 Created` by default
-- did not account for the difference between local and container database URLs in the first environment draft
+- initial dependency choices were not aligned with my runtime environment
+- some HTTP behavior needed refinement after testing
+- environment configuration initially mixed local and container assumptions
 
-What I corrected:
+### What I changed
 
-- downgraded NestJS to a Node 18 compatible line
-- added `@HttpCode(HttpStatus.OK)` to the login endpoint
-- changed `.env.example` and Docker Compose defaults so local commands use `localhost` while containers can still use the Docker service hostname
+- adjusted dependency compatibility
+- refined endpoint behavior after validation
+- improved environment configuration for reproducible local and Docker setup
 
-How I verified it:
+### How I verified it
 
 - `npm run build`
 - `npm run lint`
-- Prisma client generation and schema push
-- live `register -> login -> /auth/me` requests
-- browser validation through the frontend
+- API runtime checks
+- authenticated request validation
+- browser-level flow verification
+- Docker execution checks
 
-Did it introduce risks?
+### Risks introduced by AI-generated code
 
-- yes, mostly configuration and API-behavior risks rather than structural ones
-- those risks were caught by running the code, not by reading it only
+Most issues were runtime or configuration-related rather than architectural.
+
+This reinforced the importance of validating generated output through execution instead of assuming generated code is correct by inspection.
+
+---
 
 ## What I Learned
 
-- how to keep local and Docker database URLs separate without making the setup confusing
-- how much small status-code details matter when validating generated controllers
-- how Prisma plus a repository adapter is still easy to explain in a junior-level interview if the domain stays small
-- how to validate a frontend slice quickly by combining build checks with an actual browser flow
-- how to keep AI-assisted work defendable by validating each generated slice immediately instead of batching large changes
+- how to structure feature delivery incrementally instead of generating large batches of code
+- how environment configuration differs between local development and containerized execution
+- how small API details (status codes, validation, auth flow behavior) matter in maintainability and correctness
+- how to keep AI-assisted code defendable by validating every generated slice before continuing
+- how familiar technologies can reduce implementation risk and let me focus on software quality and infrastructure concerns
