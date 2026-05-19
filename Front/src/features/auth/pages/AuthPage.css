@@ -30,6 +30,30 @@
   color: #d7ddd8;
 }
 
+.auth-feature-grid {
+  margin-top: 1.75rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.auth-feature-card {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba(8, 16, 21, 0.34);
+  border: 1px solid rgba(216, 228, 226, 0.12);
+}
+
+.auth-feature-card strong {
+  color: #f0e7d7;
+}
+
+.auth-feature-card span {
+  color: #cdd8d4;
+}
+
 .auth-card {
   background: rgba(15, 23, 30, 0.72);
   border: 1px solid rgba(208, 218, 217, 0.18);
@@ -41,6 +65,29 @@
   box-shadow: 0 24px 60px rgba(6, 10, 14, 0.28);
 }
 
+.auth-mode-toggle {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0.35rem;
+  border-radius: 999px;
+  background: rgba(244, 244, 239, 0.06);
+}
+
+.auth-mode-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  color: #dbe4e0;
+  cursor: pointer;
+}
+
+.auth-mode-button.is-active {
+  background: rgba(216, 180, 137, 0.2);
+  color: #fff2de;
+}
+
 .auth-card-header span {
   color: #c2cfcc;
   font-size: 0.95rem;
@@ -48,6 +95,14 @@
 
 .auth-card-header h2 {
   font-size: 2.3rem;
+}
+
+.auth-helper,
+.auth-caption,
+.auth-status,
+.auth-switch-copy {
+  margin: 0;
+  color: #ccd7d3;
 }
 
 .auth-card label {
@@ -64,6 +119,21 @@
   padding: 0.95rem 1rem;
 }
 
+.auth-password-input {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.6rem;
+}
+
+.auth-inline-button {
+  border: 1px solid rgba(219, 228, 224, 0.2);
+  border-radius: 16px;
+  background: rgba(245, 239, 228, 0.06);
+  color: #f3f4ef;
+  padding: 0.95rem 1rem;
+  cursor: pointer;
+}
+
 .auth-submit,
 .auth-switch {
   border: 0;
@@ -78,10 +148,9 @@
   font-weight: 700;
 }
 
-.auth-switch {
-  background: transparent;
-  color: #dbe4e0;
-  border: 1px solid rgba(219, 228, 224, 0.18);
+.auth-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .auth-error {
@@ -89,9 +158,27 @@
   color: #ffb3a5;
 }
 
+.auth-notice {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  background: rgba(216, 180, 137, 0.14);
+  color: #ffe6bf;
+}
+
 @media (max-width: 900px) {
   .auth-layout {
     grid-template-columns: 1fr;
     padding-top: 2rem;
+  }
+
+  .auth-feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .auth-password-input {
+    grid-template-columns: 1fr;
   }
 }

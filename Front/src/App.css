@@ -8,6 +8,22 @@
     linear-gradient(180deg, #0f1b24 0%, #182733 52%, #24333c 100%);
 }
 
+.app-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.03), transparent 28%),
+    repeating-linear-gradient(
+      180deg,
+      rgba(244, 241, 233, 0.02) 0,
+      rgba(244, 241, 233, 0.02) 1px,
+      transparent 1px,
+      transparent 28px
+    );
+  pointer-events: none;
+}
+
 .app-frame {
   position: relative;
   z-index: 1;
@@ -15,6 +31,7 @@
   width: min(1160px, calc(100% - 2rem));
   margin: 0 auto;
   padding: 2rem 0 3rem;
+  animation: page-rise 0.55s ease;
 }
 
 .aurora {
@@ -37,4 +54,16 @@
   right: -10rem;
   bottom: -8rem;
   background: #8c6b4d;
+}
+
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

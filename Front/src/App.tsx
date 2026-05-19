@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { startTransition, useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { AuthPage } from './features/auth/pages/AuthPage'
 import { JournalPage } from './features/journal/pages/JournalPage'
-import { authService, type SessionUser } from './services/api'
+import { type SessionUser } from './services/api'
 
 type SessionState = {
   accessToken: string
@@ -29,6 +29,7 @@ const loadSession = (): SessionState | null => {
 
 function App() {
   const [session, setSession] = useState<SessionState | null>(() => loadSession())
+  const [authNotice, setAuthNotice] = useState<string | null>(null)
 
   useEffect(() => {
     if (!session) {
@@ -40,7 +41,7 @@ function App() {
   }, [session])
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/" element={<Navigate to={session ? '/journal' : '/login'} replace />} />
         <Route
@@ -51,9 +52,12 @@ function App() {
             ) : (
               <Shell>
                 <AuthPage
-                  onAuthenticated={async (nextSession) => {
-                    const user = await authService.me(nextSession.accessToken)
-                    setSession({ accessToken: nextSession.accessToken, user })
+                  notice={authNotice}
+                  onAuthenticated={(nextSession) => {
+                    startTransition(() => {
+                      setAuthNotice(null)
+                      setSession({ accessToken: nextSession.accessToken, user: nextSession.user })
+                    })
                   }}
                 />
               </Shell>
@@ -68,7 +72,16 @@ function App() {
                 <JournalPage
                   accessToken={session.accessToken}
                   user={session.user}
-                  onLogout={() => setSession(null)}
+                  onLogout={() => {
+                    setAuthNotice(null)
+                    setSession(null)
+                  }}
+                  onSessionExpired={(message) => {
+                    startTransition(() => {
+                      setAuthNotice(message)
+                      setSession(null)
+                    })
+                  }}
                 />
               </Shell>
             ) : (

@@ -23,6 +23,14 @@
   gap: 1rem;
 }
 
+.entry-card-meta-row {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  color: #c4d1cd;
+  font-size: 0.95rem;
+}
+
 .entry-badge {
   display: inline-flex;
   margin-bottom: 0.35rem;
@@ -57,6 +65,41 @@
   padding: 1.5rem;
   color: #d9e0dc;
   background: rgba(7, 13, 18, 0.24);
+}
+
+.entry-list-empty strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #f4f4ef;
+}
+
+.entry-list-empty p {
+  margin: 0;
+}
+
+.entry-list-skeletons {
+  gap: 1rem;
+}
+
+.entry-card-skeleton {
+  min-height: 12rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.entry-card-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
 }
 
 @media (max-width: 720px) {
